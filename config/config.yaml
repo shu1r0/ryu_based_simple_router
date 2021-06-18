@@ -1,0 +1,28 @@
+
+datapathes:
+  s1:
+    datapath_id: 1
+    interfaces:
+      - number: 1
+        name: 'host1'
+        ip_address: '192.168.1.1/24'
+      - number: 2
+        name: 's2'
+        ip_address: '192.168.2.1/24'
+    routes:
+      - ip_dst: '192.168.3.0/24'
+        next_hop: '192.168.2.2'
+        out_port: 2
+  s2:
+    datapath_id: 2
+    interfaces:
+      - number: 1
+        name: 's1'
+        ip_address: '192.168.2.2/24'
+      - number: 2
+        name: 'hosts'
+        ip_address: '192.168.3.1/24'
+    routes:
+      - ip_dst: '192.168.1.0/24'
+        next_hop: '192.168.2.1'
+        out_port: 1
