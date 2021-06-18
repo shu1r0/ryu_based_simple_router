@@ -1,8 +1,3 @@
-"""
-TODO:
-    * テーブル間のやり取りはEventでやりたい
-"""
-
 import ipaddress
 from abc import ABCMeta, abstractmethod
 
