@@ -1,7 +1,7 @@
 
 # Ryu-based Simple OpenFlow Router 13
 
-This program was created for experimentation and study.
+This is a simple router to route IPv4. This was created for experimentation and study.
 
 ## Usage
 You need to write the configuration to `config/config.yaml`

@@ -12,22 +12,22 @@ class DatapathesConfig:
     """datapathes config"""
 
     def __init__(self):
-        self.config = None
+        self._config = None
         with open('config/config.yaml', 'r') as f:
             dict_config = yaml.safe_load(f)
             logger.debug("read config : {}".format(dict_config))
             self.read(dict_config)
 
     def __getattr__(self, item):
-        return getattr(self.config, item)
+        return getattr(self._config, item)
 
     def read(self, param):
-        self.config = dict2obj(param)
+        self._config = dict2obj(param)
         self._parse_ip_address()
         self._parse_routes()
 
     def _parse_ip_address(self):
-        for datapath_config in props(self.config.datapathes).values():
+        for datapath_config in props(self._config.datapathes).values():
             ints = datapath_config.interfaces
             for i in range(len(ints)):
                 ints[i].ip_address = ipaddress.ip_interface(ints[i].ip_address)
@@ -37,14 +37,14 @@ class DatapathesConfig:
                 routes[i].next_hop = ipaddress.ip_address(routes[i].next_hop)
 
     def _parse_routes(self):
-        for datapath_config in props(self.config.datapathes).values():
+        for datapath_config in props(self._config.datapathes).values():
             routes = datapath_config.routes
             for i in range(len(routes)):
                 route = Route(routes[i].ip_dst, routes[i].out_port, RouteCodes.STATIC, next_hop=routes[i].next_hop)
                 routes[i] = route
 
     def get_datapath(self, datapath_id):
-        for dp in props(self.config.datapathes).values():
+        for dp in props(self._config.datapathes).values():
             if dp.datapath_id == datapath_id:
                 return dp
         raise KeyError("unknown datapath id")
