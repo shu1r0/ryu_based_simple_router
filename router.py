@@ -8,7 +8,10 @@ from ryu.lib.packet import packet, arp
 from ryu.lib.packet import ethernet
 
 from config.config import dp_config
+from util.router_log import get_logger
 
+
+logger = get_logger(__name__)
 
 NEXT_HOP_METADATA_MASK = 0x00000000ffffffff
 
@@ -64,7 +67,7 @@ class RouterCore(app_manager.RyuApp):
 
     @classmethod
     def flow_mod(cls, datapath, table_id, priority, match, inst):
-        self.logger.debug("flow mod (datapath={}, table_id={}, priority={}, match={}, inst={})"
+        logger.debug("flow mod (datapath={}, table_id={}, priority={}, match={}, inst={})"
                      .format(datapath, table_id, priority, match, inst))
         parser = datapath.ofproto_parser
         mod = parser.OFPFlowMod(datapath=datapath, table_id=table_id, priority=priority, match=match, instructions=inst)
@@ -72,7 +75,7 @@ class RouterCore(app_manager.RyuApp):
 
     @classmethod
     def send_packet(cls, datapath, out_port, pkt):
-        self.logger.debug("send pkt (datapath={}, out_port={}, pkt={})".format(datapath.id, out_port, pkt))
+        logger.debug("send pkt (datapath={}, out_port={}, pkt={})".format(datapath.id, out_port, pkt))
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         pkt.serialize()
@@ -95,7 +98,7 @@ class RouterCore(app_manager.RyuApp):
 
     @classmethod
     def send_arp_request(cls, datapath, out_port, target_ip):
-        self.logger.debug("send arp request (datapath={}, out_port={}, target_ip={})".format(datapath.id, out_port, target_ip))
+        logger.debug("send arp request (datapath={}, out_port={}, target_ip={})".format(datapath.id, out_port, target_ip))
         port_hw = dp_config.get_hw(datapath.id, out_port)
         port_ip = dp_config.get_ip(datapath.id, out_port)
         if not isinstance(target_ip, str):
@@ -113,5 +116,5 @@ class RouterCore(app_manager.RyuApp):
                             dst_mac='00:00:00:00:00:00',
                             dst_ip=target_ip)
         pkt.add_protocol(arp_proto)
-        self.logger.debug(pkt)
+        logger.debug(pkt)
         cls.send_packet(datapath, out_port, pkt)
