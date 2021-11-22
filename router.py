@@ -104,7 +104,7 @@ class RouterCore(app_manager.RyuApp):
         if not isinstance(target_ip, str):
             target_ip = str(target_ip)
         if not isinstance(port_ip, str):
-            port_ip = str(port_ip.ip)
+            port_ip = str(port_ip)
         pkt = packet.Packet()
         eth_proto = ethernet.ethernet(ethertype=ETH_TYPE_ARP,
                                       dst='ff:ff:ff:ff:ff:ff',

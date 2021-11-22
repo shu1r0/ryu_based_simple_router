@@ -23,7 +23,7 @@ class Three_switches_topo(Topo):
 
 def setup():
     topo = Three_switches_topo()
-    net = Mininet(topo=topo, controller=partial(RemoteController, ip='127.0.0.1', port=6653))
+    net = Mininet(topo=topo, controller=partial(RemoteController, ip='127.0.0.1', port=63333))
     net.start()
     net.hosts[0].cmd("route add default gw 192.168.1.1")
     net.hosts[1].cmd("route add default gw 192.168.3.1")
