@@ -5,6 +5,7 @@ from ryu.lib.packet import ethernet
 from ryu.lib.packet import arp
 from ryu.lib.packet import ipv4
 
+
 class Buffer(metaclass=ABCMeta):
 
     def __init__(self):
@@ -18,6 +19,7 @@ class Buffer(metaclass=ABCMeta):
     @abstractmethod
     def pop_all(self, datapath_id, ip):
         raise NotImplementedError
+
 
 class ArpTableBuffer(Buffer):
 

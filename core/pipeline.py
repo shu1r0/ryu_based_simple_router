@@ -5,6 +5,7 @@ from core.pipeline_handler import IngressHandler, ProtocolClassifierHandler, Arp
 
 logger = get_logger(__name__)
 
+
 class PIPELINE(bytes, Enum):
 
     def __new__(cls, value, cls_handler):
@@ -33,7 +34,7 @@ def get_handler(id):
         id (int) : table id
 
     Returns:
-        PIPELINE
+        PipelineHandler
     """
     return PIPELINE(id).handler
 

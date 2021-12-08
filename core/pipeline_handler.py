@@ -133,6 +133,7 @@ class ArpResponderHandler(PipelineHandler):
 
     def add_default_flows(self, datapath):
         """add default flows
+
          * Packet In when ARP directed at the datapath
         
         Args:
@@ -277,9 +278,10 @@ class RoutingTableHandler(PipelineHandler):
         Args:
             datapath (Datapath) :
         """
+        # read static route from config
         self.routing_tables.read_config(datapath.id)
 
-        # no route
+        # set no route
         ofproto = datapath.ofproto
         parser = datapath.ofproto_parser
         match = parser.OFPMatch()
@@ -287,6 +289,7 @@ class RoutingTableHandler(PipelineHandler):
         instructions = [parser.OFPInstructionActions(ofproto.OFPIT_APPLY_ACTIONS, actions)]
         self.flow_mod(datapath, self.DEFAULT_FLOW_PRIORITY, match, instructions)
 
+        # set static route
         for route in self.routing_tables.get(datapath.id):
             self.add_routing_flow(datapath, route)
 
@@ -319,6 +322,7 @@ class RoutingTableHandler(PipelineHandler):
         parser = datapath.ofproto_parser
         match = parser.OFPMatch(eth_type=ETH_TYPE_IP,
                                 ipv4_dst=(route.ip_dst_network, route.ip_dst_mask))
+        # Next Table
         next_table = self.pipeline.ARP_TABLE.table_id
 
         if route.route_code == RouteCodes.CONNECTED:
@@ -375,6 +379,7 @@ class ArpTableHandler(PipelineHandler):
     def __init__(self, pipeline, table_id):
         super().__init__(pipeline, table_id)
         self.arp_table = ArpTable()
+        # packets waiting ARP Reply
         self.buffer = ArpTableBuffer(self.pipeline)
 
     def add_default_flows(self, datapath):
@@ -438,7 +443,7 @@ class ArpTableHandler(PipelineHandler):
 
     def add_arp_table_entry(self, datapath, port_hw, ip, mac):
         """add address into controller's arp table and insert flow entry to rewrite ethernet address
-         
+        
         Args:
             datapath (Datapath) : datapath
             port_hw (str) : ethernet source address
